@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MentorSphere - Professional Mentor & Mentee Management Portal</title>
+  
+  <!-- Modern Inter Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-border: #c7d2fe;
+      
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --success-text: #047857;
+
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --warning-text: #b45309;
+
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --danger-light: #fef2f2;
+      --danger-text: #b91c1c;
+
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 10px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar / Navbar */
+    .navbar {
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 68px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-brand {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-brand svg {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--primary);
+      background-color: var(--surface-subtle);
+    }
+
+    .nav-tab-btn.active {
+      color: var(--primary);
+      background-color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+
+    .status-dot.online {
+      background: var(--success);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+    }
+
+    .status-dot.offline {
+      background: var(--warning);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1140px;
+      width: 100%;
+      margin: 1.75rem auto 3rem;
+      padding: 0 1.25rem;
+      flex: 1;
+    }
+
+    .page-header {
+      margin-bottom: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .page-header p {
+      margin: 0.35rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.75rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* KPI Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue { background: #e0e7ff; color: #4338ca; }
+    .stat-icon.green { background: #dcfce7; color: #15803d; }
+    .stat-icon.purple { background: #f3e8ff; color: #7e22ce; }
+    .stat-icon.amber { background: #fef3c7; color: #b45309; }
+
+    .stat-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-main);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Capacity Progress Bar */
+    .capacity-bar-wrap {
+      background: #e2e8f0;
+      height: 9px;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .capacity-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    .capacity-bar-fill.full {
+      background: var(--danger);
+    }
+
+    /* Form Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 680px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      .navbar {
+        padding: 0 1rem;
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.4rem;
+      color: var(--text-main);
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    input[type="text"], 
+    input[type="number"], 
+    input[type="email"], 
+    input[type="tel"], 
+    select, 
+    input[type="file"] {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 0.92rem;
+      transition: all 0.2s;
+      font-family: inherit;
+      background-color: #f9fafb;
+      color: var(--text-main);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: var(--surface);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .error-msg, .error {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+      display: block;
+      min-height: 16px;
+    }
+
+    /* Buttons */
+    button {
+      padding: 0.65rem 1.25rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: all 0.15s ease-in-out;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    button:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background-color: var(--danger-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: var(--surface-subtle);
+    }
+
+    .btn-outline-primary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+    }
+
+    .btn-outline-primary:hover:not(:disabled) {
+      background: var(--primary-light);
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.82rem;
+      border-radius: 5px;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background-color: var(--surface);
+    }
+
+    th, td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .mentor-thumbnail, .user-avatar {
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .badge-success { background: var(--success-light); color: var(--success-text); }
+    .badge-warning { background: var(--warning-light); color: var(--warning-text); }
+    .badge-neutral { background: var(--surface-subtle); color: var(--text-muted); }
+
+    /* Allocation Cards Grid */
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .allocation-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .allocation-mentor-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.85rem;
+    }
+
+    .mentee-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.75rem 0;
+      min-height: 32px;
+    }
+
+    .mentee-chip {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Popups and Overlays */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      background: var(--surface);
+      padding: 1.75rem 2rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      width: 540px;
+      max-width: 92vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .popup.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease-out;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+    }
+
+    /* Toast Notification */
+    #toastContainer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      background: #1e293b;
+      color: white;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideUp 0.25s ease-out;
+      transition: opacity 0.3s;
+    }
+
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar / Top Bar -->
+  <header id="top-bar">
+    <nav class="navbar">
+      <a href="#" class="nav-brand" onclick="switchTab('dashboard'); return false;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+        MentorSphere
+      </a>
+
+      <div class="nav-links">
+        <button class="nav-tab-btn active" id="tabBtnDashboard" onclick="switchTab('dashboard')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Dashboard
+        </button>
+        <button class="nav-tab-btn" id="tabBtnMentors" onclick="switchTab('mentors')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Mentors
+        </button>
+        <button class="nav-tab-btn" id="tabBtnMentees" onclick="switchTab('mentees')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Mentees
+        </button>
+      </div>
+
+      <div class="nav-status" id="serverStatusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: DASHBOARD                                         -->
+    <!-- ======================================================== -->
+    <div id="tabDashboard" class="tab-panel active">
+      <div class="page-header">
+        <div>
+          <h1>Program Overview & Analytics</h1>
+          <p>Real-time mentoring capacity, mentee assignments, and mentor load.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary btn-sm" onclick="loadAllData(true)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Refresh
+          </button>
+          <button class="btn-sm" onclick="switchTab('mentees')">+ Add Mentee</button>
+        </div>
+      </div>
+
+      <!-- KPI Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-value" id="kpiTotalMentors">0</span>
+            <span class="stat-label">Total Mentors</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-value" id="kpiTotalMentees">0</span>
+            <span class="stat-label">Total Mentees</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-value" id="kpiAssignedMentees">0</span>
+            <span class="stat-label">Assigned Mentees</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-value" id="kpiUnassignedMentees">0</span>
+            <span class="stat-label">Unassigned Mentees</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capacity Progress Bar -->
+      <div class="card" style="padding: 1.25rem 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <div style="font-weight: 600; font-size: 0.95rem;">Overall Mentorship Capacity Utilization</div>
+          <div style="font-weight: 700; color: var(--primary);" id="kpiCapacityText">0% (0 / 0 Slots Filled)</div>
+        </div>
+        <div class="capacity-bar-wrap">
+          <div class="capacity-bar-fill" id="kpiCapacityFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Mentor Allocation Breakdown -->
+      <div class="card">
+        <div class="card-header-row">
+          <div>
+            <h2>Mentor Allocation & Capacity Overview</h2>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">See student mentees assigned to each faculty mentor and remaining capacity</div>
+          </div>
+          <button class="btn-sm btn-outline-primary" onclick="switchTab('mentors')">Manage Mentors</button>
+        </div>
+
+        <div id="allocationGrid" class="allocation-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: MENTORS                                           -->
+    <!-- ======================================================== -->
+    <div id="tabMentors" class="tab-panel">
+      <div class="page-header">
+        <div>
+          <h1>Mentor Management</h1>
+          <p>Register faculty mentors, define student mentoring capacity, and manage database records.</p>
+        </div>
+      </div>
+
+      <!-- Add Mentor Form Section (Task 1, 2, 3) -->
+      <div class="card" id="add-mentor-section">
+        <h2>Add Mentor</h2>
+        <form id="add-mentor-form" enctype="multipart/form-data" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="mentor-name">Mentor Name <span class="required">*</span></label>
+              <input type="text" id="mentor-name" name="mentorName" placeholder="e.g. Dr. Jane Doe">
+              <span class="error-msg" id="mentor-name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="employee-id">Employee ID <span class="required">*</span></label>
+              <input type="text" id="employee-id" name="employeeId" placeholder="e.g. EMP101">
+              <span class="error-msg" id="employee-id-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="department">Department <span class="required">*</span></label>
+              <select id="department" name="department">
+                <option value="">-- Select Department --</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+              </select>
+              <span class="error-msg" id="department-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="designation">Designation <span class="required">*</span></label>
+              <input type="text" id="designation" name="designation" placeholder="e.g. Professor">
+              <span class="error-msg" id="designation-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="max-mentees">Maximum Mentees Allowed <span class="required">*</span></label>
+              <input type="number" id="max-mentees" name="maxMentees" min="1" placeholder="e.g. 5">
+              <span class="error-msg" id="max-mentees-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="profile-photo">Profile Photo (JPG/PNG only) <span class="required">*</span></label>
+              <input type="file" id="profile-photo" name="profilePhoto" accept=".jpg, .jpeg, .png, image/jpeg, image/png">
+              <span class="error-msg" id="profile-photo-error"></span>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button type="submit" id="add-mentor-btn" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mentor List Table Section -->
+      <div class="card" id="mentor-list-section">
+        <div class="card-header-row">
+          <h2>Registered Mentors Directory</h2>
+          <div style="font-size: 0.85rem; color: var(--text-muted);" id="mentorTableCount">0 Mentors</div>
+        </div>
+        <div class="table-container">
+          <table id="mentor-table">
+            <thead>
+              <tr>
+                <th>Mentor</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Capacity</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="mentor-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                  Loading mentors from database...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: MENTEES (New Section)                             -->
+    <!-- ======================================================== -->
+    <div id="tabMentees" class="tab-panel">
+      <div class="page-header">
+        <div>
+          <h1>Mentee Management</h1>
+          <p>Enroll students, monitor academic records, and assign qualified faculty mentors.</p>
+        </div>
+      </div>
+
+      <!-- Add Mentee Form Card -->
+      <div class="card" id="add-mentee-section">
+        <h2>Enroll New Mentee</h2>
+        <form id="add-mentee-form" enctype="multipart/form-data" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="mentee-name">Mentee Full Name <span class="required">*</span></label>
+              <input type="text" id="mentee-name" name="menteeName" placeholder="e.g. Alex Johnson">
+              <span class="error-msg" id="mentee-name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="student-id">Student ID / Roll No <span class="required">*</span></label>
+              <input type="text" id="student-id" name="studentId" placeholder="e.g. CS-2026-081">
+              <span class="error-msg" id="student-id-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="mentee-department">Department <span class="required">*</span></label>
+              <select id="mentee-department" name="department">
+                <option value="">-- Select Department --</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+              </select>
+              <span class="error-msg" id="mentee-department-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="academic-year">Academic Year <span class="required">*</span></label>
+              <select id="academic-year" name="academicYear">
+                <option value="">-- Select Academic Year --</option>
+                <option value="First Year (FE)">First Year (FE)</option>
+                <option value="Second Year (SE)">Second Year (SE)</option>
+                <option value="Third Year (TE)">Third Year (TE)</option>
+                <option value="Final Year (BE)">Final Year (BE)</option>
+              </select>
+              <span class="error-msg" id="academic-year-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="mentee-email">Email Address</label>
+              <input type="email" id="mentee-email" name="email" placeholder="e.g. alex@college.edu">
+            </div>
+
+            <div class="form-group">
+              <label for="mentee-phone">Phone Number</label>
+              <input type="tel" id="mentee-phone" name="phone" placeholder="e.g. +91 98765 43210">
+            </div>
+
+            <div class="form-group">
+              <label for="mentor-select">Assign Mentor (Optional)</label>
+              <select id="mentor-select" name="mentorId">
+                <option value="">-- No Mentor (Assign Later) --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="mentee-photo">Profile Photo (Optional, JPG/PNG)</label>
+              <input type="file" id="mentee-photo" name="menteePhoto" accept=".jpg, .jpeg, .png, image/jpeg, image/png">
+              <span class="error-msg" id="mentee-photo-error"></span>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button type="submit" id="add-mentee-btn" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Enroll Mentee
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mentee Directory Table Card -->
+      <div class="card" id="mentee-list-section">
+        <div class="card-header-row">
+          <h2>Registered Mentees Directory</h2>
+          <div style="font-size: 0.85rem; color: var(--text-muted);" id="menteeTableCount">0 Mentees</div>
+        </div>
+        <div class="table-container">
+          <table id="mentee-table">
+            <thead>
+              <tr>
+                <th>Mentee</th>
+                <th>Student ID</th>
+                <th>Department & Year</th>
+                <th>Assigned Mentor</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="mentee-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                  Loading mentees from database...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /container -->
+
+
+  <!-- ======================================================== -->
+  <!-- POPUPS / MODALS                                          -->
+  <!-- ======================================================== -->
+
+  <!-- Edit Mentor Popup -->
+  <div id="editOverlay" class="overlay" onclick="closeEditPopup()"></div>
+  <div id="edit-popup" class="popup">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Edit Mentor Details</h2>
+    <form id="edit-mentor-form" enctype="multipart/form-data" novalidate>
+      <input type="hidden" id="edit-id" name="id">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="edit-mentor-name">Mentor Name <span class="required">*</span></label>
+          <input type="text" id="edit-mentor-name" name="editMentorName">
+          <span class="error-msg" id="edit-mentor-name-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-employee-id">Employee ID <span class="required">*</span></label>
+          <input type="text" id="edit-employee-id" name="editEmployeeId">
+          <span class="error-msg" id="edit-employee-id-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-department">Department <span class="required">*</span></label>
+          <select id="edit-department" name="editDepartment">
+            <option value="">-- Select Department --</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+          </select>
+          <span class="error-msg" id="edit-department-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-designation">Designation <span class="required">*</span></label>
+          <input type="text" id="edit-designation" name="editDesignation">
+          <span class="error-msg" id="edit-designation-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-max-mentees">Maximum Mentees Allowed <span class="required">*</span></label>
+          <input type="number" id="edit-max-mentees" name="editMaxMentees" min="1">
+          <span class="error-msg" id="edit-max-mentees-error"></span>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="edit-profile-photo">Profile Photo (Leave empty to keep existing, JPG/PNG)</label>
+          <input type="file" id="edit-profile-photo" name="editProfilePhoto" accept=".jpg, .jpeg, .png, image/jpeg, image/png">
+          <span class="error-msg" id="edit-profile-photo-error"></span>
+        </div>
+      </div>
+
+      <div class="popup-actions">
+        <button type="button" id="cancel-edit-btn" class="btn-secondary" onclick="closeEditPopup()">Cancel</button>
+        <button type="submit" id="save-edit-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Edit Mentee Popup -->
+  <div id="editMenteeOverlay" class="overlay" onclick="closeEditMenteePopup()"></div>
+  <div id="edit-mentee-popup" class="popup">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Edit Mentee Details</h2>
+    <form id="edit-mentee-form" enctype="multipart/form-data" novalidate>
+      <input type="hidden" id="edit-mentee-id" name="id">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="edit-mentee-name">Mentee Full Name <span class="required">*</span></label>
+          <input type="text" id="edit-mentee-name" name="editMenteeName">
+          <span class="error-msg" id="edit-mentee-name-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-student-id">Student ID / Roll No <span class="required">*</span></label>
+          <input type="text" id="edit-student-id" name="editStudentId">
+          <span class="error-msg" id="edit-student-id-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-mentee-department">Department <span class="required">*</span></label>
+          <select id="edit-mentee-department" name="editDepartment">
+            <option value="">-- Select Department --</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+          </select>
+          <span class="error-msg" id="edit-mentee-department-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-academic-year">Academic Year <span class="required">*</span></label>
+          <select id="edit-academic-year" name="editAcademicYear">
+            <option value="">-- Select Academic Year --</option>
+            <option value="First Year (FE)">First Year (FE)</option>
+            <option value="Second Year (SE)">Second Year (SE)</option>
+            <option value="Third Year (TE)">Third Year (TE)</option>
+            <option value="Final Year (BE)">Final Year (BE)</option>
+          </select>
+          <span class="error-msg" id="edit-academic-year-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-mentee-email">Email</label>
+          <input type="email" id="edit-mentee-email" name="editEmail">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-mentee-phone">Phone Number</label>
+          <input type="tel" id="edit-mentee-phone" name="editPhone">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="edit-mentee-mentor-select">Assigned Mentor</label>
+          <select id="edit-mentee-mentor-select" name="editMentorId">
+            <option value="">-- No Mentor (Unassigned) --</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="edit-mentee-photo">Profile Photo (Leave empty to keep existing)</label>
+          <input type="file" id="edit-mentee-photo" name="editMenteePhoto" accept=".jpg, .jpeg, .png, image/jpeg, image/png">
+        </div>
+      </div>
+
+      <div class="popup-actions">
+        <button type="button" class="btn-secondary" onclick="closeEditMenteePopup()">Cancel</button>
+        <button type="submit" id="save-edit-mentee-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Delete Confirmation Popup (Shared) -->
+  <div id="deleteOverlay" class="overlay" onclick="closeDeletePopup()"></div>
+  <div id="delete-popup" class="popup" style="width: 440px;">
+    <h2 style="margin-top: 0; color: var(--danger); font-size: 1.25rem;" id="deletePopupTitle">Confirm Deletion</h2>
+    <p id="delete-confirm-text" style="color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+      Are you sure you want to delete this item?
+    </p>
+    <div class="popup-actions">
+      <button type="button" id="cancel-delete-btn" class="btn-secondary" onclick="closeDeletePopup()">Cancel</button>
+      <button type="button" id="confirm-delete-btn" class="btn-danger">Yes, Delete</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer"></div>
+
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC (Connected with PHP + MySQL)            -->
+  <!-- ======================================================== -->
+  <script>
+    // State
+    let mentorsList = [];
+    let menteesList = [];
+    let itemToDelete = null; // { type: 'mentor'|'mentee', id: ... }
+
+    // Add Mentor Elements
+    const addMentorForm = document.getElementById("add-mentor-form");
+    const mentorNameInput = document.getElementById("mentor-name");
+    const employeeIdInput = document.getElementById("employee-id");
+    const departmentSelect = document.getElementById("department");
+    const designationInput = document.getElementById("designation");
+    const maxMenteesInput = document.getElementById("max-mentees");
+    const profilePhotoInput = document.getElementById("profile-photo");
+    const addMentorBtn = document.getElementById("add-mentor-btn");
+
+    // Add Mentor Errors
+    const mentorNameError = document.getElementById("mentor-name-error");
+    const employeeIdError = document.getElementById("employee-id-error");
+    const departmentError = document.getElementById("department-error");
+    const designationError = document.getElementById("designation-error");
+    const maxMenteesError = document.getElementById("max-mentees-error");
+    const profilePhotoError = document.getElementById("profile-photo-error");
+
+    // Add Mentee Elements
+    const addMenteeForm = document.getElementById("add-mentee-form");
+    const menteeNameInput = document.getElementById("mentee-name");
+    const studentIdInput = document.getElementById("student-id");
+    const menteeDepartmentSelect = document.getElementById("mentee-department");
+    const academicYearSelect = document.getElementById("academic-year");
+    const menteeEmailInput = document.getElementById("mentee-email");
+    const menteePhoneInput = document.getElementById("mentee-phone");
+    const mentorSelect = document.getElementById("mentor-select");
+    const menteePhotoInput = document.getElementById("mentee-photo");
+    const addMenteeBtn = document.getElementById("add-mentee-btn");
+
+    // Add Mentee Errors
+    const menteeNameError = document.getElementById("mentee-name-error");
+    const studentIdError = document.getElementById("student-id-error");
+    const menteeDeptError = document.getElementById("mentee-department-error");
+    const academicYearError = document.getElementById("academic-year-error");
+
+    // Table & KPI Elements
+    const mentorTableBody = document.getElementById("mentor-table-body");
+    const mentorTableCount = document.getElementById("mentorTableCount");
+    const menteeTableBody = document.getElementById("mentee-table-body");
+    const menteeTableCount = document.getElementById("menteeTableCount");
+
+    const kpiTotalMentors = document.getElementById("kpiTotalMentors");
+    const kpiTotalMentees = document.getElementById("kpiTotalMentees");
+    const kpiAssignedMentees = document.getElementById("kpiAssignedMentees");
+    const kpiUnassignedMentees = document.getElementById("kpiUnassignedMentees");
+    const kpiCapacityText = document.getElementById("kpiCapacityText");
+    const kpiCapacityFill = document.getElementById("kpiCapacityFill");
+    const allocationGrid = document.getElementById("allocationGrid");
+
+    // Popups
+    const editPopup = document.getElementById("edit-popup");
+    const editOverlay = document.getElementById("editOverlay");
+    const editForm = document.getElementById("edit-mentor-form");
+    const editIdInput = document.getElementById("edit-id");
+    const editMentorName = document.getElementById("edit-mentor-name");
+    const editEmployeeId = document.getElementById("edit-employee-id");
+    const editDepartment = document.getElementById("edit-department");
+    const editDesignation = document.getElementById("edit-designation");
+    const editMaxMentees = document.getElementById("edit-max-mentees");
+    const editProfilePhoto = document.getElementById("edit-profile-photo");
+
+    // Edit Mentee Popups
+    const editMenteePopup = document.getElementById("edit-mentee-popup");
+    const editMenteeOverlay = document.getElementById("editMenteeOverlay");
+    const editMenteeForm = document.getElementById("edit-mentee-form");
+    const editMenteeIdInput = document.getElementById("edit-mentee-id");
+    const editMenteeName = document.getElementById("edit-mentee-name");
+    const editStudentId = document.getElementById("edit-student-id");
+    const editMenteeDepartment = document.getElementById("edit-mentee-department");
+    const editAcademicYear = document.getElementById("edit-academic-year");
+    const editMenteeEmail = document.getElementById("edit-mentee-email");
+    const editMenteePhone = document.getElementById("edit-mentee-phone");
+    const editMenteeMentorSelect = document.getElementById("edit-mentee-mentor-select");
+    const editMenteePhoto = document.getElementById("edit-mentee-photo");
+
+    // Delete Modal
+    const deletePopup = document.getElementById("delete-popup");
+    const deleteOverlay = document.getElementById("deleteOverlay");
+    const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+    const deleteConfirmText = document.getElementById("delete-confirm-text");
+
+    // Toast Notification Helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+
+      if (tabId === 'dashboard') {
+        document.getElementById('tabDashboard').classList.add('active');
+        document.getElementById('tabBtnDashboard').classList.add('active');
+        renderDashboard();
+      } else if (tabId === 'mentors') {
+        document.getElementById('tabMentors').classList.add('active');
+        document.getElementById('tabBtnMentors').classList.add('active');
+        renderMentorTable();
+      } else if (tabId === 'mentees') {
+        document.getElementById('tabMentees').classList.add('active');
+        document.getElementById('tabBtnMentees').classList.add('active');
+        populateMentorDropdowns();
+        renderMenteeTable();
+      }
+    }
+
+    // Avatar initials helper
+    function getAvatarMarkup(photoPath, name) {
+      if (photoPath && photoPath.trim() !== '') {
+        return `<img src="${escapeHtml(photoPath)}" alt="${escapeHtml(name)}" class="mentor-thumbnail" onerror="this.onerror=null; this.outerHTML='<div class=\\'mentor-thumbnail\\'>${getInitials(name)}</div>'">`;
+      }
+      return `<div class="mentor-thumbnail">${getInitials(name)}</div>`;
+    }
+
+    function getInitials(name) {
+      if (!name) return '??';
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return name.substring(0, 2).toUpperCase();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Status Pill
+    function updateServerStatus(online) {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      if (online) {
+        dot.className = 'status-dot online';
+        text.innerText = 'MySQL Connected';
+      } else {
+        dot.className = 'status-dot offline';
+        text.innerText = 'Offline Demo Mode';
+      }
+    }
+
+    // Validation Helpers
+    function isNonEmptyString(val) {
+      return typeof val === "string" && val.trim().length > 0;
+    }
+
+    function isPositiveWholeNumber(val) {
+      if (val === "" || val === null || val === undefined) return false;
+      const num = Number(val);
+      return Number.isInteger(num) && num > 0;
+    }
+
+    function isValidImageFile(file) {
+      if (!file) return false;
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+      const fileName = file.name.toLowerCase();
+      const hasValidExt = validExtensions.some(ext => fileName.endsWith(ext));
+      const hasValidType = validTypes.includes(file.type);
+      return hasValidType || hasValidExt;
+    }
+
+    // ========================================================
+    // Real-Time Add Mentor Form Validation
+    // ========================================================
+    function validateAddMentorForm() {
+      let isValid = true;
+
+      if (!mentorNameInput.value.trim()) {
+        mentorNameError.textContent = mentorNameInput.dataset.touched ? "Mentor Name cannot be empty." : "";
+        isValid = false;
+      } else mentorNameError.textContent = "";
+
+      if (!employeeIdInput.value.trim()) {
+        employeeIdError.textContent = employeeIdInput.dataset.touched ? "Employee ID cannot be empty." : "";
+        isValid = false;
+      } else employeeIdError.textContent = "";
+
+      if (!departmentSelect.value) {
+        departmentError.textContent = departmentSelect.dataset.touched ? "Please select a department." : "";
+        isValid = false;
+      } else departmentError.textContent = "";
+
+      if (!designationInput.value.trim()) {
+        designationError.textContent = designationInput.dataset.touched ? "Designation cannot be empty." : "";
+        isValid = false;
+      } else designationError.textContent = "";
+
+      if (!isPositiveWholeNumber(maxMenteesInput.value)) {
+        maxMenteesError.textContent = maxMenteesInput.dataset.touched ? "Must be a positive whole number (e.g. 1, 2, 3)." : "";
+        isValid = false;
+      } else maxMenteesError.textContent = "";
+
+      const photoFile = profilePhotoInput.files[0];
+      if (!photoFile) {
+        profilePhotoError.textContent = profilePhotoInput.dataset.touched ? "Please choose a JPG or PNG image." : "";
+        isValid = false;
+      } else if (!isValidImageFile(photoFile)) {
+        profilePhotoError.textContent = "Profile photo must be a JPG or PNG image.";
+        isValid = false;
+      } else profilePhotoError.textContent = "";
+
+      addMentorBtn.disabled = !isValid;
+      return isValid;
+    }
+
+    [mentorNameInput, employeeIdInput, departmentSelect, designationInput, maxMenteesInput, profilePhotoInput].forEach(element => {
+      element.addEventListener("input", () => { element.dataset.touched = "true"; validateAddMentorForm(); });
+      element.addEventListener("change", () => { element.dataset.touched = "true"; validateAddMentorForm(); });
+    });
+
+    // ========================================================
+    // Real-Time Add Mentee Form Validation
+    // ========================================================
+    function validateAddMenteeForm() {
+      let isValid = true;
+
+      if (!menteeNameInput.value.trim()) {
+        menteeNameError.textContent = menteeNameInput.dataset.touched ? "Mentee Name cannot be empty." : "";
+        isValid = false;
+      } else menteeNameError.textContent = "";
+
+      if (!studentIdInput.value.trim()) {
+        studentIdError.textContent = studentIdInput.dataset.touched ? "Student ID cannot be empty." : "";
+        isValid = false;
+      } else studentIdError.textContent = "";
+
+      if (!menteeDepartmentSelect.value) {
+        menteeDeptError.textContent = menteeDepartmentSelect.dataset.touched ? "Please select a department." : "";
+        isValid = false;
+      } else menteeDeptError.textContent = "";
+
+      if (!academicYearSelect.value) {
+        academicYearError.textContent = academicYearSelect.dataset.touched ? "Please select academic year." : "";
+        isValid = false;
+      } else academicYearError.textContent = "";
+
+      addMenteeBtn.disabled = !isValid;
+      return isValid;
+    }
+
+    [menteeNameInput, studentIdInput, menteeDepartmentSelect, academicYearSelect].forEach(element => {
+      element.addEventListener("input", () => { element.dataset.touched = "true"; validateAddMenteeForm(); });
+      element.addEventListener("change", () => { element.dataset.touched = "true"; validateAddMenteeForm(); });
+    });
+
+    // ========================================================
+    // DATA LOADING (Mentors & Mentees)
+    // ========================================================
+    async function loadAllData(showFeedback = false) {
+      try {
+        const [mentorRes, menteeRes] = await Promise.all([
+          fetch("api.php?action=read"),
+          fetch("api.php?action=read_mentees")
+        ]);
+
+        const mentorJson = await mentorRes.json();
+        const menteeJson = await menteeRes.json();
+
+        if (mentorJson.status === "success") {
+          mentorsList = mentorJson.data || [];
+          menteesList = menteeJson.status === "success" ? menteeJson.data || [] : [];
+          updateServerStatus(true);
+          renderDashboard();
+          renderMentorTable();
+          renderMenteeTable();
+          populateMentorDropdowns();
+          if (showFeedback) showToast("Database synchronized successfully!", "success");
+        } else {
+          throw new Error("Database offline");
+        }
+      } catch (err) {
+        console.warn("Using offline fallback", err);
+        updateServerStatus(false);
+        loadLocalFallback();
+      }
+    }
+
+    function loadLocalFallback() {
+      const storedMentors = localStorage.getItem("ms_mentors");
+      const storedMentees = localStorage.getItem("ms_mentees");
+
+      if (storedMentors) mentorsList = JSON.parse(storedMentors);
+      else {
+        mentorsList = [
+          { id: 1, name: "Dr. Alan Turing", employee_id: "EMP101", department: "Computer Science", designation: "Professor", max_mentees: 5, photo_path: "", assigned_mentees_count: 2 },
+          { id: 2, name: "Grace Hopper", employee_id: "EMP102", department: "Information Technology", designation: "Associate Professor", max_mentees: 4, photo_path: "", assigned_mentees_count: 1 }
+        ];
+        localStorage.setItem("ms_mentors", JSON.stringify(mentorsList));
+      }
+
+      if (storedMentees) menteesList = JSON.parse(storedMentees);
+      else {
+        menteesList = [
+          { id: 1, name: "Rohan Patil", student_id: "CS-2026-014", department: "Computer Science", academic_year: "Third Year (TE)", email: "rohan@college.edu", phone: "+91 98234 11223", mentor_id: 1, mentor_name: "Dr. Alan Turing" },
+          { id: 2, name: "Sneha Kulkarni", student_id: "CS-2026-029", department: "Computer Science", academic_year: "Third Year (TE)", email: "sneha@college.edu", phone: "+91 97654 33445", mentor_id: 1, mentor_name: "Dr. Alan Turing" },
+          { id: 3, name: "Amit Verma", student_id: "IT-2026-008", department: "Information Technology", academic_year: "Second Year (SE)", email: "amit@college.edu", phone: "+91 99112 44556", mentor_id: 2, mentor_name: "Grace Hopper" }
+        ];
+        localStorage.setItem("ms_mentees", JSON.stringify(menteesList));
+      }
+
+      renderDashboard();
+      renderMentorTable();
+      renderMenteeTable();
+      populateMentorDropdowns();
+    }
+
+    // Populate Mentor Dropdowns in Mentee Add/Edit forms
+    function populateMentorDropdowns() {
+      const selects = [mentorSelect, editMenteeMentorSelect];
+      selects.forEach(select => {
+        if (!select) return;
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">-- No Mentor (Unassigned) --</option>';
+
+        mentorsList.forEach(m => {
+          const assignedCount = menteesList.filter(me => me.mentor_id == m.id).length;
+          const maxCap = Number(m.max_mentees || 5);
+          const isFull = assignedCount >= maxCap;
+          const opt = document.createElement("option");
+          opt.value = m.id;
+          opt.textContent = `${m.name} (${m.department}) - [${assignedCount}/${maxCap} Mentees]${isFull ? ' - FULL' : ''}`;
+          if (isFull && select === mentorSelect) opt.disabled = true;
+          select.appendChild(opt);
+        });
+
+        if (currentVal) select.value = currentVal;
+      });
+    }
+
+    // ========================================================
+    // DASHBOARD RENDERING
+    // ========================================================
+    function renderDashboard() {
+      const totalMentors = mentorsList.length;
+      const totalMentees = menteesList.length;
+      const assignedMentees = menteesList.filter(m => m.mentor_id != null && m.mentor_id != '').length;
+      const unassignedMentees = totalMentees - assignedMentees;
+      const totalCapacity = mentorsList.reduce((acc, m) => acc + Number(m.max_mentees || 0), 0);
+      const capacityPct = totalCapacity > 0 ? Math.min(100, Math.round((assignedMentees / totalCapacity) * 100)) : 0;
+
+      kpiTotalMentors.textContent = totalMentors;
+      kpiTotalMentees.textContent = totalMentees;
+      kpiAssignedMentees.textContent = assignedMentees;
+      kpiUnassignedMentees.textContent = unassignedMentees;
+
+      kpiCapacityText.textContent = `${capacityPct}% (${assignedMentees} / ${totalCapacity} Slots Filled)`;
+      kpiCapacityFill.style.width = `${capacityPct}%`;
+      kpiCapacityFill.className = capacityPct >= 100 ? 'capacity-bar-fill full' : 'capacity-bar-fill';
+
+      allocationGrid.innerHTML = "";
+      if (mentorsList.length === 0) {
+        allocationGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No mentors enrolled yet.</div>`;
+        return;
+      }
+
+      mentorsList.forEach(mentor => {
+        const assignedList = menteesList.filter(me => me.mentor_id == mentor.id);
+        const assignedCount = assignedList.length;
+        const maxCap = Number(mentor.max_mentees || 5);
+        const isFull = assignedCount >= maxCap;
+        const barPct = Math.min(100, Math.round((assignedCount / maxCap) * 100));
+
+        let studentChips = assignedList.map(st => `<span class="mentee-chip">${escapeHtml(st.name)} <small>(${escapeHtml(st.student_id)})</small></span>`).join("");
+        if (assignedList.length === 0) {
+          studentChips = `<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">No mentees assigned yet</span>`;
+        }
+
+        const card = document.createElement("div");
+        card.className = "allocation-card";
+        card.innerHTML = `
+          <div>
+            <div class="allocation-mentor-header">
+              ${getAvatarMarkup(mentor.photo_path, mentor.name)}
+              <div>
+                <strong style="display: block; font-size: 0.95rem;">${escapeHtml(mentor.name)}</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(mentor.department)}</span>
+              </div>
+            </div>
+            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">
+              Assigned Mentees (${assignedCount}/${maxCap}):
+            </div>
+            <div class="mentee-chips">${studentChips}</div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-top: 8px;">
+              <span>Capacity Load</span>
+              <span style="color: ${isFull ? 'var(--danger)' : 'var(--primary)'};">${barPct}%</span>
+            </div>
+            <div class="capacity-bar-wrap">
+              <div class="capacity-bar-fill ${isFull ? 'full' : ''}" style="width: ${barPct}%;"></div>
+            </div>
+          </div>
+        `;
+        allocationGrid.appendChild(card);
+      });
+    }
+
+    // ========================================================
+    // MENTOR CRUD
+    // ========================================================
+    function renderMentorTable() {
+      mentorTableBody.innerHTML = "";
+      mentorTableCount.textContent = `${mentorsList.length} Mentors`;
+
+      if (mentorsList.length === 0) {
+        mentorTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2.5rem 0;">No mentors added yet. Fill out the form above to add one.</td></tr>`;
+        return;
+      }
+
+      mentorsList.forEach(mentor => {
+        const assignedCount = menteesList.filter(me => me.mentor_id == mentor.id).length;
+        const maxCap = Number(mentor.max_mentees || 5);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>
+            <div class="user-cell">
+              ${getAvatarMarkup(mentor.photo_path, mentor.name)}
+              <div>
+                <strong style="display: block; color: var(--text-main);">${escapeHtml(mentor.name)}</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(mentor.designation)}</span>
+              </div>
+            </div>
+          </td>
+          <td><code>${escapeHtml(mentor.employee_id)}</code></td>
+          <td><span class="badge">${escapeHtml(mentor.department)}</span></td>
+          <td>${escapeHtml(mentor.designation)}</td>
+          <td>
+            <span class="badge ${assignedCount >= maxCap ? 'badge-warning' : 'badge-success'}">
+              ${assignedCount} / ${maxCap} Mentees
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <button type="button" class="btn-sm btn-outline-primary" onclick="openEditMentorPopup(${mentor.id})">Edit</button>
+            <button type="button" class="btn-sm btn-danger" style="margin-left: 6px;" onclick="openDeletePopup('mentor', ${mentor.id})">Delete</button>
+          </td>
+        `;
+        mentorTableBody.appendChild(row);
+      });
+    }
+
+    addMentorForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      [mentorNameInput, employeeIdInput, departmentSelect, designationInput, maxMenteesInput, profilePhotoInput].forEach(el => el.dataset.touched = "true");
+      if (!validateAddMentorForm()) return;
+
+      addMentorBtn.disabled = true;
+      addMentorBtn.textContent = "Saving...";
+
+      try {
+        const formData = new FormData(addMentorForm);
+        const response = await fetch("api.php?action=create", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showToast("Mentor added to database successfully!", "success");
+          addMentorForm.reset();
+          [mentorNameInput, employeeIdInput, departmentSelect, designationInput, maxMenteesInput, profilePhotoInput].forEach(el => delete el.dataset.touched);
+          validateAddMentorForm();
+          await loadAllData();
+          switchTab('mentors');
+        } else {
+          showToast(result.message || "Failed to add mentor.", "error");
+        }
+      } catch (err) {
+        showToast("Error communicating with server.", "error");
+      } finally {
+        addMentorBtn.textContent = "Submit";
+        validateAddMentorForm();
+      }
+    });
+
+    window.openEditMentorPopup = function(id) {
+      const mentor = mentorsList.find(m => m.id == id);
+      if (!mentor) return;
+
+      editIdInput.value = mentor.id;
+      editMentorName.value = mentor.name;
+      editEmployeeId.value = mentor.employee_id;
+      editDepartment.value = mentor.department;
+      editDesignation.value = mentor.designation;
+      editMaxMentees.value = mentor.max_mentees;
+      editProfilePhoto.value = "";
+
+      editPopup.classList.add("active");
+      editOverlay.classList.add("active");
+    };
+
+    window.closeEditPopup = function() {
+      editPopup.classList.remove("active");
+      editOverlay.classList.remove("active");
+    };
+
+    editForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("save-edit-btn");
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Updating...";
+
+      try {
+        const formData = new FormData(editForm);
+        const response = await fetch("api.php?action=update", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showToast("Mentor updated successfully!", "success");
+          closeEditPopup();
+          await loadAllData();
+        } else {
+          showToast(result.message || "Update failed.", "error");
+        }
+      } catch (err) {
+        showToast("Server error during update.", "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Changes";
+      }
+    });
+
+    // ========================================================
+    // MENTEE CRUD
+    // ========================================================
+    function renderMenteeTable() {
+      menteeTableBody.innerHTML = "";
+      menteeTableCount.textContent = `${menteesList.length} Mentees`;
+
+      if (menteesList.length === 0) {
+        menteeTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2.5rem 0;">No mentees enrolled yet. Use the form above to enroll a student.</td></tr>`;
+        return;
+      }
+
+      menteesList.forEach(mentee => {
+        const mentorInfo = mentee.mentor_name 
+          ? `<span class="badge badge-success">${escapeHtml(mentee.mentor_name)}</span>`
+          : `<span class="badge badge-neutral">Unassigned</span>`;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>
+            <div class="user-cell">
+              ${getAvatarMarkup(mentee.photo_path, mentee.name)}
+              <div>
+                <strong style="display: block; color: var(--text-main);">${escapeHtml(mentee.name)}</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(mentee.email || mentee.phone || 'No contact')}</span>
+              </div>
+            </div>
+          </td>
+          <td><code>${escapeHtml(mentee.student_id)}</code></td>
+          <td>
+            <div>${escapeHtml(mentee.department)}</div>
+            <small style="color: var(--text-muted);">${escapeHtml(mentee.academic_year)}</small>
+          </td>
+          <td>${mentorInfo}</td>
+          <td style="text-align: right;">
+            <button type="button" class="btn-sm btn-outline-primary" onclick="openEditMenteePopup(${mentee.id})">Edit</button>
+            <button type="button" class="btn-sm btn-danger" style="margin-left: 6px;" onclick="openDeletePopup('mentee', ${mentee.id})">Delete</button>
+          </td>
+        `;
+        menteeTableBody.appendChild(row);
+      });
+    }
+
+    addMenteeForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      [menteeNameInput, studentIdInput, menteeDepartmentSelect, academicYearSelect].forEach(el => el.dataset.touched = "true");
+      if (!validateAddMenteeForm()) return;
+
+      addMenteeBtn.disabled = true;
+      addMenteeBtn.textContent = "Enrolling...";
+
+      try {
+        const formData = new FormData(addMenteeForm);
+        const response = await fetch("api.php?action=create_mentee", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showToast("Mentee enrolled successfully!", "success");
+          addMenteeForm.reset();
+          [menteeNameInput, studentIdInput, menteeDepartmentSelect, academicYearSelect].forEach(el => delete el.dataset.touched);
+          validateAddMenteeForm();
+          await loadAllData();
+          switchTab('mentees');
+        } else {
+          showToast(result.message || "Failed to enroll mentee.", "error");
+        }
+      } catch (err) {
+        showToast("Error communicating with server.", "error");
+      } finally {
+        addMenteeBtn.textContent = "Enroll Mentee";
+        validateAddMenteeForm();
+      }
+    });
+
+    window.openEditMenteePopup = function(id) {
+      const mentee = menteesList.find(m => m.id == id);
+      if (!mentee) return;
+
+      editMenteeIdInput.value = mentee.id;
+      editMenteeName.value = mentee.name;
+      editStudentId.value = mentee.student_id;
+      editMenteeDepartment.value = mentee.department;
+      editAcademicYear.value = mentee.academic_year;
+      editMenteeEmail.value = mentee.email || "";
+      editMenteePhone.value = mentee.phone || "";
+      editMenteeMentorSelect.value = mentee.mentor_id || "";
+      editMenteePhoto.value = "";
+
+      editMenteePopup.classList.add("active");
+      editMenteeOverlay.classList.add("active");
+    };
+
+    window.closeEditMenteePopup = function() {
+      editMenteePopup.classList.remove("active");
+      editMenteeOverlay.classList.remove("active");
+    };
+
+    editMenteeForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById("save-edit-mentee-btn");
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Updating...";
+
+      try {
+        const formData = new FormData(editMenteeForm);
+        const response = await fetch("api.php?action=update_mentee", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showToast("Mentee details updated successfully!", "success");
+          closeEditMenteePopup();
+          await loadAllData();
+        } else {
+          showToast(result.message || "Update failed.", "error");
+        }
+      } catch (err) {
+        showToast("Server error during update.", "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Changes";
+      }
+    });
+
+    // ========================================================
+    // SHARED DELETE MODAL
+    // ========================================================
+    window.openDeletePopup = function(type, id) {
+      itemToDelete = { type, id };
+      const titleElem = document.getElementById("deletePopupTitle");
+
+      if (type === 'mentor') {
+        const mentor = mentorsList.find(m => m.id == id);
+        titleElem.textContent = "Delete Mentor";
+        deleteConfirmText.textContent = `Are you sure you want to delete "${mentor ? mentor.name : 'this mentor'}"? This will unassign all linked mentees.`;
+      } else {
+        const mentee = menteesList.find(m => m.id == id);
+        titleElem.textContent = "Delete Mentee";
+        deleteConfirmText.textContent = `Are you sure you want to remove "${mentee ? mentee.name : 'this mentee'}" from the database?`;
+      }
+
+      deletePopup.classList.add("active");
+      deleteOverlay.classList.add("active");
+    };
+
+    window.closeDeletePopup = function() {
+      itemToDelete = null;
+      deletePopup.classList.remove("active");
+      deleteOverlay.classList.remove("active");
+    };
+
+    confirmDeleteBtn.addEventListener("click", async function() {
+      if (!itemToDelete) return;
+
+      confirmDeleteBtn.disabled = true;
+      confirmDeleteBtn.textContent = "Deleting...";
+
+      try {
+        const formData = new FormData();
+        formData.append("id", itemToDelete.id);
+        const action = itemToDelete.type === 'mentor' ? "delete" : "delete_mentee";
+
+        const response = await fetch(`api.php?action=${action}`, { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showToast(`${itemToDelete.type === 'mentor' ? 'Mentor' : 'Mentee'} deleted successfully!`, "success");
+          closeDeletePopup();
+          await loadAllData();
+        } else {
+          showToast(result.message || "Delete operation failed.", "error");
+        }
+      } catch (err) {
+        showToast("Server error while deleting item.", "error");
+      } finally {
+        confirmDeleteBtn.disabled = false;
+        confirmDeleteBtn.textContent = "Yes, Delete";
+      }
+    });
+
+    // Initial Load
+    loadAllData();
+    validateAddMentorForm();
+    validateAddMenteeForm();
+  </script>
+</body>
+</html>

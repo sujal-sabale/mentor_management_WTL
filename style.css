@@ -1,0 +1,407 @@
+/* ===================================================
+   MentorSphere - Academic Mentorship Portal Stylesheet
+   =================================================== */
+
+/* --- Reset & Global Typography --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f5f9;
+    color: #1e293b;
+    line-height: 1.6;
+    padding-bottom: 60px;
+}
+
+/* --- Navigation Bar & Top Bar --- */
+#top-bar {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Brand & Logo */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.brand-logo {
+    color: #38bdf8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Nav Links */
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Nav Right & Badges */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mentor-count-badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.mentor-count-badge strong {
+    color: #ffffff;
+}
+
+.admin-badge {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Main Layout Containers --- */
+.container,
+section {
+    max-width: 1000px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 28px 32px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+section h2 {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+hr {
+    display: none;
+}
+
+/* --- Form Styles --- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+form > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+/* Form Inputs, Selects & File Uploads */
+input[type="text"],
+input[type="number"],
+select,
+input[type="file"] {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    background-color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+input[type="file"] {
+    padding: 8px 12px;
+    background-color: #f8fafc;
+    border: 1px dashed #94a3b8;
+    cursor: pointer;
+}
+
+/* Error Messages */
+.error-msg {
+    color: #dc2626;
+    font-size: 0.82rem;
+    margin-top: 4px;
+    min-height: 16px;
+    font-weight: 500;
+}
+
+/* Buttons */
+button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Submit & Save Buttons */
+#add-mentor-btn,
+#save-edit-btn {
+    background-color: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+#add-mentor-btn:hover:not(:disabled),
+#save-edit-btn:hover:not(:disabled) {
+    background-color: #1d4ed8;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+#add-mentor-btn:disabled,
+#save-edit-btn:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.65;
+}
+
+/* Table Action Buttons */
+.btn-edit {
+    background-color: #0284c7;
+    color: #ffffff;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    margin-right: 6px;
+}
+
+.btn-edit:hover {
+    background-color: #0369a1;
+}
+
+.btn-delete,
+#confirm-delete-btn {
+    background-color: #ef4444;
+    color: #ffffff;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.btn-delete:hover,
+#confirm-delete-btn:hover {
+    background-color: #dc2626;
+}
+
+#cancel-edit-btn,
+#cancel-delete-btn {
+    background-color: #64748b;
+    color: #ffffff;
+    padding: 10px 18px;
+    margin-left: 8px;
+}
+
+#cancel-edit-btn:hover,
+#cancel-delete-btn:hover {
+    background-color: #475569;
+}
+
+/* --- Table Styling --- */
+#mentor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#mentor-table thead {
+    background-color: #1e293b;
+    color: #ffffff;
+}
+
+#mentor-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border: 1px solid #334155;
+}
+
+#mentor-table td {
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+/* Alternating row colors */
+#mentor-table tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+#mentor-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Row Hover effect */
+#mentor-table tbody tr:hover {
+    background-color: #e0f2fe;
+    transition: background-color 0.15s ease;
+}
+
+/* Profile Photo Thumbnail */
+.mentor-thumbnail {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #cbd5e1;
+    display: block;
+}
+
+/* --- Popups / Modals --- */
+.popup-box {
+    max-width: 600px;
+    margin: 25px auto;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-left: 5px solid #2563eb;
+    padding: 26px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+#delete-popup {
+    border-left: 5px solid #ef4444;
+    max-width: 480px;
+}
+
+#delete-popup p {
+    font-size: 1rem;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+
+    .container, section {
+        margin: 15px 10px;
+        padding: 18px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    input[type="file"] {
+        max-width: 100%;
+    }
+
+    #mentor-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
